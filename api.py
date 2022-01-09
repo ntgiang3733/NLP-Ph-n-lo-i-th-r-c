@@ -11,29 +11,33 @@ from sklearn.metrics import accuracy_score
 
 import services as services
 
-xl_file = pd.ExcelFile("./data.xlsx")
-dfs = xl_file.parse('Sheet1')
+xl_file_train = pd.ExcelFile("./data_train.xlsx")
+dfs_train = xl_file_train.parse('Sheet1')
+
+xl_file_test = pd.ExcelFile("./data_test.xlsx")
+dfs_test = xl_file_test.parse('Sheet1')
 
 old_document = []
 old_document_test = []
 document = []
 label = []
+label_test = []
 
-for d in dfs.Document:
+for d in dfs_train.Document:
     old_document.append(d)
+
+for l in dfs_train.Label:
+    label.append(l)
+
+for d in dfs_test.Document:
     old_document_test.append(d)
 
-for l in dfs.Label:
-    label.append(l)
+for l in dfs_test.Label:
+    label_test.append(l)
 
 document = [services.raw_text_preprocess(d) for d in old_document]
 
-document_test = document[200:300]
-old_document_test = old_document_test[200:300]
-label_test = label[200:300]
-old_document = old_document[:255] + old_document[275:]
-document = document[:255] + document[275:]
-label = label[:255] + label[275:]
+document_test = [services.raw_text_preprocess(d) for d in old_document_test]
 
 set_words = []
 
